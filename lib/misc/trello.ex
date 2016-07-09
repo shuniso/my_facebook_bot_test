@@ -21,6 +21,11 @@ defmodule Misc.Trello do
                 "content_type": "text",
                 "title": "仕様読む",
                 "payload": "TRELLO" <> "4"
+            },
+            %{
+                "content_type": "text",
+                "title": "やっぱやめる",
+                "payload": "WHY"
             }
         ]
 

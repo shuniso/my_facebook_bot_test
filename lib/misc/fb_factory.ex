@@ -10,28 +10,39 @@ defmodule Misc.FbFactory do
     end
 
     def handle_cmd("NEW", text, id) do
-        IO.puts "cmd=zen"
         construct("どれをやりますか？", get_list, id)
     end
     def handle_cmd("TIMEUP", text, id) do
-        IO.puts "cmd=zen"
-        construct("時間だよ。終わった？", is_end, id)
+        construct("時間だよ。🍅　終わった？", is_end, id)
     end
     def handle_cmd("UNTILL", text, id) do
-        IO.puts "cmd=zen"
         construct("そうですか。仕方ないですね。 X)", continue, id)
     end
     def handle_cmd("REST", text, id) do
-        IO.puts "cmd=zen"
         construct("おつかれさま〜 :)", id)
     end
+    def handle_cmd("MORE", text, id) do
+        construct("がんばれ！", id)
+    end
     def handle_cmd("COMPLETE", text, id) do
-        IO.puts "cmd=COMPLETE"
         construct("GOOD JOB !! :)", go_to_next, id)
+    end
+    def handle_cmd("WHY", text, id) do
+        construct("なにしにきた", id)
     end
 
     def handle_cmd(cmd, text, id) do
-        construct(text, id)
+        case String.starts_with?(cmd, "TRELLO") do
+          true ->
+              construct("ではスタート。がんばってください。🍅単位でお知らせします。", id)
+          false ->
+              construct("始める？", resp, id)
+        end
+    end
+
+
+    def start_task() do
+
     end
 
     def construct(text, id) do
@@ -55,6 +66,21 @@ defmodule Misc.FbFactory do
 
     def get_list() do
         Misc.Trello.get
+    end
+
+    def resp() do
+        [
+            %{
+                "content_type": "text",
+                "title": "タスクを選ぶ",
+                "payload": "NEW"
+            },
+            %{
+                "content_type": "text",
+                "title": "なんでもない",
+                "payload": "WHY"
+            }
+        ]
     end
 
     # TIMEUP
