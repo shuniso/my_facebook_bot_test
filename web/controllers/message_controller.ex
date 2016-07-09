@@ -34,7 +34,7 @@ defmodule Fbot.MessageController do
                 :err ->
                     IO.inspect  "from bot ? do not handle this "
                 _ ->
-                    Misc.FbFactory.construct(cmd, text, id)
+                    Misc.FbFactory.handle(cmd, text, id)
                     |> Misc.Msg.post
             end
           end
