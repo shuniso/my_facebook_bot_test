@@ -13,7 +13,7 @@ use Mix.Config
 # which you typically run after static files are built.
 config :fbot, Fbot.Endpoint,
   http: [port: System.get_env("FBOT_PORT")],
-  url: [host: "example.com", System.get_env("FBOT_PORT")],
+  url: [host: "example.com", port: System.get_env("FBOT_PORT")],
   cache_static_manifest: "priv/static/manifest.json"
 
 # Do not print debug messages in production
