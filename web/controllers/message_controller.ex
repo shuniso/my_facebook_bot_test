@@ -1,6 +1,5 @@
 defmodule Fbot.MessageController do
   use Fbot.Web, :controller
-
   alias Fbot.Message
 
   plug :scrub_params, "entry" when action in [:create, :update]
@@ -21,60 +20,31 @@ defmodule Fbot.MessageController do
 
   def create(conn, %{"entry" => messages, "object" => object}) do
 
-    # changeset = Message.changeset(%Message{}, message_params)
-
     IO.inspect messages
     IO.inspect object
-    token = System.get_env("FB_BOT_TOKEN")
-    url = "https://graph.facebook.com/v2.6/me/messages?access_token=" <> token
 
     Enum.each(messages,
       fn(ms) ->
         Enum.each(ms["messaging"],
           fn(m) ->
             IO.inspect m
-            json = cond do
-              m["message"] -> Poison.encode! %{
-                  "recipient": %{"id": m["sender"]["id"]},
-                  "message": cond do
-                      m["message"]["attachments"] -> %{"attachment": List.first m["message"]["attachments"]}
-                      m["message"]["text"] ->
-                          IO.inspect m["message"]["text"]
-                          %{"text": m["message"]["text"]}
-                      true -> nil
-                  end
-                }
-              true -> nil
-            end
-            IO.inspect json
-          if json != nil do
-              response = HTTPoison.request!(:post, url, json,
-                [
-                  {"Content-Type", "application/json; charset=UTF-8"}
-                ]
-              )
-            else
-              IO.inspect  "from bot ? do not handle this "
+            {cmd, text, id} = Misc.FbParser.parse m
+
+            case cmd do
+                :err ->
+                    IO.inspect  "from bot ? do not handle this "
+                _ ->
+                    Misc.FbFactory.construct(cmd, text, id)
+                    |> Misc.Msg.post
             end
           end
         )
       end
     )
-    send_resp(conn, 200, "")
+    render(conn, "index.json", messages: %{})
 
-    '''
-    case Repo.insert(changeset) do
-      {:ok, message} ->
-        conn
-        |> put_status(:created)
-        |> put_resp_header("location", message_path(conn, :show, message))
-        |> render("show.json", message: message)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(Fbot.ChangesetView, "error.json", changeset: changeset)
-    end
-    '''
+
+
   end
 
   def show(conn, %{"id" => id}) do

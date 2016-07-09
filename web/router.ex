@@ -23,7 +23,7 @@ defmodule Fbot.Router do
     pipe_through :api
 
     resources "/", MessageController, except: [:new, :edit]
-  end
+  end  
 
   # Other scopes may use custom stacks.
   # scope "/api", Fbot do

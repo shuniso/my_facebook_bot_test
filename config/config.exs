@@ -14,6 +14,21 @@ config :fbot, Fbot.Endpoint,
   pubsub: [name: Fbot.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
+config :fbot,
+  fb_url: "https://graph.facebook.com/v2.6/me/messages?access_token=",
+  fb_token: System.get_env("FB_BOT_TOKEN"),
+  gyazo_upload_url: "https://upload.gyazo.com/api/upload",
+  gyazo_token: System.get_env("GYAZO_TOKEN"),
+  zen_api_url: "https://api.github.com/zen",
+  lgtm_url: "http://www.lgtm.in/g",
+  cat_url: "http://thecatapi.com/api/images/get",
+  cat_token: System.get_env("CAT_TOKEN"),
+  dcm_key: System.get_env("DOCOMO_DIALOGUE_API_KEY"),
+  excuse_url: "http://programmingexcuses.com/",
+  ul_key: System.get_env("UL_API_KEY"),
+  ul_decompose: "https://chatbot-api.userlocal.jp/api/decompose",
+  ul_chat: "https://chatbot-api.userlocal.jp/api/chat",
+  ul_name: "https://chatbot-api.userlocal.jp/api/name"
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
